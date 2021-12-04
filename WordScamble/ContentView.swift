@@ -35,6 +35,14 @@ struct ContentView: View {
                 }
             }
             .navigationTitle(rootWord)
+            .toolbar {
+                Button("Reset") {
+                    startGame()
+                    withAnimation {
+                        usedWord.removeAll()
+                    }
+                }
+            }
         }
         .onAppear(perform: startGame)
         .alert(errorTitle, isPresented: $showingError) {
@@ -50,6 +58,7 @@ struct ContentView: View {
 //        check the word are more than 1 chacracter or not
         guard anwser.count > 0 else { return }
 //        more validation
+        
         guard isOriginal(word: userWord) else {
             wordError(title: "Word used already!", message: "Be more original!")
             return
@@ -62,6 +71,11 @@ struct ContentView: View {
         
         guard isReal(word: userWord) else {
             wordError(title: "Word not recognized", message: "You can not make this up!")
+            return
+        }
+        
+        guard isValid(word: userWord) else {
+            wordError(title: "Not that easy!", message: "This is too easy you know!")
             return
         }
         
@@ -81,6 +95,12 @@ struct ContentView: View {
         }
 //        this line for the case can not use the start.txt
         fatalError("could not load start txt from bundle.")
+    }
+    
+    func isValid(word: String) -> Bool {
+        if !(word.count < 3) && !(word == rootWord) {
+            return true
+        } else { return false }
     }
     
     func isOriginal(word: String) -> Bool {
@@ -111,6 +131,10 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    
+    func restartGame() {
+        
     }
     
 }
